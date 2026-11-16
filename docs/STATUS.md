@@ -1,7 +1,7 @@
 # Status
 
 ## Live
-- v1.1 released. Commands: `/packlight`, `new`, `weigh`, `unpack`.
+- v1.2 released. Commands: `/packlight`, `/packlight-new-project`, `/packlight-weigh`, `/packlight-unpack`.
 
 ## Uncommitted
 - (none)
