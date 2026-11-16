@@ -17,7 +17,7 @@ Read the word after `/packlight` (or the user's intent) and do only that job:
 |---|---|
 | `/packlight` | Setup. No code in the folder: the new-project path. Code: the existing-project path. |
 | `/packlight new` | Setup, new-project path, even if a few files exist. |
-| `/packlight weigh` | Token report: run `python3 <this skill folder>/scripts/usage_report.py` from the project folder; add `--since YYYY-MM-DD` if the user gives a date or packlight was set up on a known date (check git log of docs/STATUS.md). Show the numbers and one line on what they mean. It prints totals only, never message content. |
+| `/packlight weigh` | Token report: run `python3 <this skill folder>/scripts/usage_report.py` from the project folder; add `--since YYYY-MM-DD` for a before/after split: the date the user gives, else the first git commit of docs/STATUS.md; if neither exists (no git), ask the user for the date they switched - file dates are not reliable. Show the numbers and one line on what they mean. It prints totals only, never message content. |
 | `/packlight unpack` | Tidy an existing setup (see "Unpack" below). |
 
 ## Setup

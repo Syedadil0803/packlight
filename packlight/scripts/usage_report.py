@@ -98,13 +98,17 @@ def report(rows, since=None, top=10):
         print(f"  {r['id'][:8]:<10} {r['start']:<10} {r['calls']:>6} {fmt(r['total']):>8} {per:>9}")
 
 
-def project_dir(arg):
+def project_dirs(arg):
+    """The project's transcript folder plus those of its subfolders and worktrees."""
     root = Path.home() / ".claude" / "projects"
     if arg:
         p = Path(arg).expanduser()
-        return p if p.is_dir() else root / arg
-    # Claude Code names the folder after the working directory, non-alphanumerics as "-".
-    return root / re.sub(r"[^A-Za-z0-9]", "-", os.getcwd())
+        base = p if p.is_dir() else root / arg
+    else:
+        # Claude Code names the folder after the working directory, non-alphanumerics as "-".
+        base = root / re.sub(r"[^A-Za-z0-9]", "-", os.getcwd())
+    # ponytail: name-prefix match, so a sibling folder like "app-old" next to "app" is counted too.
+    return [base] + sorted(d for d in base.parent.glob(base.name + "-*") if d.is_dir())
 
 
 def selftest():
@@ -151,10 +155,11 @@ def main():
         return selftest()
     if args.since and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", args.since):
         sys.exit("--since must be YYYY-MM-DD")
-    d = project_dir(args.project)
-    paths = sorted(d.rglob("*.jsonl")) if d.is_dir() else []
+    dirs = [d for d in project_dirs(args.project) if d.is_dir()]
+    paths = sorted(p for d in dirs for p in d.rglob("*.jsonl"))
     if not paths:
-        sys.exit(f"No transcripts found in {d}. Pass --project.")
+        sys.exit("No transcripts found for this folder. Pass --project.")
+    print(f"Read {len(dirs)} transcript folder(s): the project, its subfolders and worktrees")
     report(summarize(collect(paths)), args.since, args.top)
 
 
