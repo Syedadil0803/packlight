@@ -1,7 +1,7 @@
 # New project: interview and stack
 
 Read this only when the project folder has no code yet. Goal: understand what is being built,
-pick a stack that fits, record why, then write the docs (SKILL.md step 3).
+pick a stack that fits, record why, then write the docs (`setup.md` step 3).
 
 ## 1. Interview - three short rounds, a few questions each
 
@@ -26,6 +26,8 @@ Ask one round, wait, then the next. Skip anything already answered. Offer exampl
 11. Who builds and maintains it, and what languages or tools they already know.
 
 ## 2. Suggest a stack
+Use the strongest model for this step; the interview and the docs need only a mid one.
+
 
 Write one short table: layer · choice · why (one line, tied to an answer above). Then one alternative
 and when it would be better. Ask the user to pick or change. Don't write code before they pick.
@@ -80,5 +82,5 @@ Once the user picks:
   if they carry business rules (deposits, refunds, roles), with "What it does" and
   "Rules" filled from the answers, "Where the code is" left as "not built yet".
 
-Then continue with SKILL.md step 5, without the usage report (a new project has no history yet).
+Then continue with `setup.md` step 5, without the usage report (a new project has no history yet).
 If the run has no user to ask (scripted), take the main suggestion and note that in DECISIONS.md.

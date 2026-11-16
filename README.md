@@ -46,8 +46,17 @@ the code, then writes:
 
 **Report.** `scripts/usage_report.py` (Python 3.8+, standard library only) reads your local transcripts in
 `~/.claude/projects/` and prints sessions, total tokens, median per session, tokens per model call,
-the input / output / cache split, top sessions, and a before / after split for a date. It never
+the input / output / cache split, setup cost per session (context before any work), how many sessions
+ran past 150k context, tokens by model, top sessions, a before / after split for a date, and plain tips
+("turn off unused connectors", "clear earlier", "route routine work to a cheaper model"). It never
 prints message content.
+
+**Model per task.** The skill tells Claude which model tier each job needs: strongest for stack choice,
+architecture and security; mid for writing docs and features; fastest for reading code, drift checks and
+reports. Bulk reading goes to a subagent on a cheaper model.
+
+**Light on itself.** SKILL.md is a short menu; setup, new-project and unpack steps live in their own files and
+load only when that command runs.
 
 ## Install
 

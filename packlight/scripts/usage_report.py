@@ -20,6 +20,7 @@ from pathlib import Path
 
 KINDS = ("input_tokens", "output_tokens", "cache_creation_input_tokens", "cache_read_input_tokens")
 SHORT = ("input", "output", "cache_write", "cache_read")
+LONG = 150_000  # context size at which a session should be cleared
 
 
 def read_lines(paths):
@@ -49,16 +50,25 @@ def collect(paths):
         if ts and (s["start"] is None or ts < s["start"]):
             s["start"] = ts
         # A streamed reply is logged several times under one id; keep the last copy.
-        s["calls"][msg["id"]] = {k: int(usage.get(k) or 0) for k in KINDS}
+        c = {k: int(usage.get(k) or 0) for k in KINDS}
+        c.update(ts=ts or "", model=msg.get("model") or "?", side=bool(d.get("isSidechain")))
+        s["calls"][msg["id"]] = c
     return sessions
 
 
 def summarize(sessions):
     rows = []
     for sid, s in sessions.items():
-        sums = {k: sum(c[k] for c in s["calls"].values()) for k in KINDS}
+        calls = s["calls"].values()
+        sums = {k: sum(c[k] for c in calls) for k in KINDS}
+        # Context size of a call = everything it read; output is excluded.
+        main = sorted((c for c in calls if not c["side"]), key=lambda c: c["ts"]) or list(calls)
+        ctx = [c["input_tokens"] + c["cache_creation_input_tokens"] + c["cache_read_input_tokens"] for c in main]
+        models = {}
+        for c in calls:
+            models[c["model"]] = models.get(c["model"], 0) + sum(c[k] for k in KINDS)
         rows.append({"id": sid, "start": (s["start"] or "")[:10], "calls": len(s["calls"]),
-                     "total": sum(sums.values()), **sums})
+                     "total": sum(sums.values()), "setup": ctx[0], "peak": max(ctx), "models": models, **sums})
     return rows
 
 
@@ -81,9 +91,40 @@ def block(title, rows):
     print(f"  total tokens        {fmt(total)}")
     print(f"  median per session  {fmt(statistics.median(r['total'] for r in rows))}")
     print(f"  per model call      {fmt(total / calls) if calls else 0}")
+    print(f"  setup per session   {fmt(statistics.median(r['setup'] for r in rows))}  (median first-call context)")
+    long_ = [r for r in rows if r["peak"] > LONG]
+    print(f"  past {fmt(LONG)} context  {len(long_)} of {len(rows)} sessions")
     for k, name in zip(KINDS, SHORT):
         part = sum(r[k] for r in rows)
         print(f"  {name:<19} {fmt(part):>7}  {100 * part / total if total else 0:.1f}%")
+
+
+def model_mix(rows):
+    mix = {}
+    for r in rows:
+        for m, n in r["models"].items():
+            mix[m] = mix.get(m, 0) + n
+    return {m: n for m, n in sorted(mix.items(), key=lambda x: -x[1]) if m != "<synthetic>"}
+
+
+def tips(rows):
+    """Plain-language hints from the numbers."""
+    out = []
+    setup = statistics.median(r["setup"] for r in rows)
+    if setup > 50_000:
+        out.append(f"Each session starts at {fmt(setup)} before any work: trim CLAUDE.md, turn off unused connectors.")
+    long_ = sum(r["peak"] > LONG for r in rows)
+    if long_ > len(rows) / 4:
+        out.append(f"{long_} of {len(rows)} sessions ran past {fmt(LONG)} context: clear at feature end or ~150k.")
+    total = sum(r["total"] for r in rows)
+    mix = model_mix(rows)
+    top = sum(n for m, n in mix.items() if "opus" in m.lower())
+    if total and top / total > 0.8:
+        out.append(f"{100 * top / total:.0f}% of tokens on the strongest model: route routine work to a cheaper one.")
+    reads = sum(r["cache_read_input_tokens"] for r in rows)
+    if total and reads / total > 0.95 and statistics.median(r["total"] for r in rows) > 20_000_000:
+        out.append("Most tokens are the chat being re-read: shorter sessions save the most.")
+    return out or ["Nothing stands out. Sessions look lean."]
 
 
 def report(rows, since=None, top=10):
@@ -91,11 +132,19 @@ def report(rows, since=None, top=10):
     if since:
         block(f"Before {since}", [r for r in rows if r["start"] < since])
         block(f"From {since}", [r for r in rows if r["start"] >= since])
+    total = sum(r["total"] for r in rows)
+    print("\nBy model (all sessions)")
+    for m, n in model_mix(rows).items():
+        print(f"  {m[:28]:<28} {fmt(n):>7}  {100 * n / total if total else 0:.1f}%")
     print(f"\nTop {top} sessions")
-    print(f"  {'session':<10} {'started':<10} {'calls':>6} {'total':>8} {'per call':>9}")
+    print(f"  {'session':<10} {'started':<10} {'calls':>6} {'total':>8} {'per call':>9} {'peak':>7}")
     for r in sorted(rows, key=lambda r: -r["total"])[:top]:
         per = fmt(r["total"] / r["calls"]) if r["calls"] else "0"
-        print(f"  {r['id'][:8]:<10} {r['start']:<10} {r['calls']:>6} {fmt(r['total']):>8} {per:>9}")
+        print(f"  {r['id'][:8]:<10} {r['start']:<10} {r['calls']:>6} {fmt(r['total']):>8} {per:>9} {fmt(r['peak']):>7}")
+    recent = [r for r in rows if r["start"] >= since] if since else rows
+    print("\nTips" + (f" (from {since})" if since else ""))
+    for t in tips(recent or rows):
+        print(f"  - {t}")
 
 
 def project_dirs(arg):
@@ -140,7 +189,9 @@ def selftest():
     assert a["cache_read_input_tokens"] == 3500, a
     assert a["total"] == 30 + 71 + 300 + 3500, a
     assert a["start"] == "2026-01-01", a
+    assert a["setup"] == 10 + 100 + 1000 and a["peak"] == 10 + 100 + 2000, a
     assert fmt(1_234_567) == "1.2M" and fmt(999) == "999"
+    assert tips([a]) == ["Nothing stands out. Sessions look lean."]
     print("selftest ok")
 
 
