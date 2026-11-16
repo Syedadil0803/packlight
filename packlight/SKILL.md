@@ -1,17 +1,17 @@
 ---
 name: packlight
-description: Keep Claude Code sessions short and cheap. Sets up a rules-only CLAUDE.md, a one-screen docs/STATUS.md and one docs/features page per area, guides the stack for a new project, tidies drifted docs, and reports token use per session. Use when the user types /packlight or says "pack light", "lighten the load", "set up packlight", or asks for a token usage report for this project.
+description: Keep Claude Code sessions short and cheap. Sets up a rules-only CLAUDE.md, a one-screen docs/STATUS.md and one docs/features page per area, plans a new project end to end (stack, hosting, monthly cost), tidies drifted docs, and reports token use per session. Use when the user types /packlight or says "pack light", "lighten the load", "set up packlight", or asks for a token usage report for this project.
 ---
 
 # packlight
 
 Most tokens in a long session are the chat being re-read on every step. Short sessions that start from
-a small, current set of docs cost far less. Load only the file the command needs. (`/packlight new`, `weigh`, `unpack` with a space mean the same.)
+a small, current set of docs cost far less. Load only the file the command needs. (`/packlight new-project`, `weigh`, `unpack` with a space mean the same.)
 
 | Command | Do this |
 |---|---|
 | `/packlight` | No code in the folder: read `new-project.md`. Code: read `setup.md`. |
-| `/packlight-new` | Read `new-project.md`, even if a few files exist. |
+| `/packlight-new-project` | Read `new-project.md`, even if a few files exist. |
 | `/packlight-weigh` | Run `python3 <this skill folder>/scripts/usage_report.py` from the project folder (no other file needed). For a before/after split add `--since YYYY-MM-DD`: the date the user gives, else the first git commit of docs/STATUS.md; with no git, ask the user (file dates are unreliable). Show the numbers and the script's tips. It never prints message content. |
 | `/packlight-unpack` | Read `unpack.md`. |
 

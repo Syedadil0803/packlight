@@ -8,7 +8,7 @@
 
 ## Open follow-ups
 - Not yet tested with a person answering the setup and new-project interviews (all tests were scripted).
-- `/packlight-unpack` and `/packlight-new` not yet run in a real session (only `weigh` was).
+- `/packlight-unpack` and `/packlight-new-project` not yet run in a real session (only `weigh` was).
 - Windows and Linux transcript paths untested.
 
 ## Waiting on owner
