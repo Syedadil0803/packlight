@@ -64,6 +64,8 @@ load only when that command runs.
 git clone https://github.com/Syedadil0803/packlight.git packlight-repo
 mkdir -p ~/.claude/skills
 cp -r packlight-repo/packlight ~/.claude/skills/
+mkdir -p ~/.claude/commands
+cp packlight-repo/commands/*.md ~/.claude/commands/   # optional: /packlight-weigh, -new, -unpack in the menu
 ```
 
 For one project only, copy it to `<project>/.claude/skills/` instead.
@@ -81,6 +83,7 @@ Check it works: `python3 ~/.claude/skills/packlight/scripts/usage_report.py --se
 | `/packlight weigh` | Weighs your bag: token report for this project. |
 | `/packlight unpack` | Tidies an existing setup: trims STATUS.md, merges tiny pages, fixes pages that drifted from the code. |
 
+The shortcuts `/packlight-weigh`, `/packlight-new` and `/packlight-unpack` do the same and show up in the `/` menu.
 Saying "pack light" or "lighten the load" works too. Packlight never commits; review the files and commit them yourself.
 
 The report can also be run directly, from the project folder:
