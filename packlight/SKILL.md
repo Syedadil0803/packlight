@@ -12,7 +12,7 @@ a small, current set of docs cost far less. Load only the file the command needs
 |---|---|
 | `/packlight` | No code in the folder: read `new-project.md`. Code: read `setup.md`. |
 | `/packlight-new-project` | Read `new-project.md`, even if a few files exist. |
-| `/packlight-weigh` | Run `python3 <this skill folder>/scripts/usage_report.py` from the project folder (no other file needed). For a before/after split add `--since YYYY-MM-DD`: the date the user gives, else the first git commit of docs/STATUS.md; with no git, ask the user (file dates are unreliable). Show the numbers and the script's tips. It never prints message content. |
+| `/packlight-weigh` | Run `python3 <this skill folder>/scripts/usage_report.py` from the project folder (no other file needed). No docs/STATUS.md yet: run it without `--since`; that is the "before" baseline. Otherwise add `--since YYYY-MM-DD` for a before/after split: the date the user gives, else the `--since` date setup wrote in STATUS.md, else the first git commit of docs/STATUS.md, else ask the user (file dates are unreliable). Show the numbers and the script's tips. It never prints message content. |
 | `/packlight-unpack` | Read `unpack.md`. |
 
 ## Model per task
