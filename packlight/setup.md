@@ -119,4 +119,4 @@ planned features with no code get a line in STATUS.md "Next" or "Later", and a p
 ## 5. Finish
 - Print a short list of files written and line counts. Check CLAUDE.md < 80 and STATUS.md < 60 lines.
 - Don't commit. Tell the user what to review, plus any open questions (project rules, mismatches).
-- Suggest `/packlight weigh` now and again in a week to see the change.
+- Suggest `/packlight-weigh` now and again in a week to see the change.

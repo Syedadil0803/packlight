@@ -65,7 +65,7 @@ git clone https://github.com/Syedadil0803/packlight.git packlight-repo
 mkdir -p ~/.claude/skills
 cp -r packlight-repo/packlight ~/.claude/skills/
 mkdir -p ~/.claude/commands
-cp packlight-repo/commands/*.md ~/.claude/commands/   # optional: /packlight-weigh, -new, -unpack in the menu
+cp packlight-repo/commands/*.md ~/.claude/commands/
 ```
 
 For one project only, copy it to `<project>/.claude/skills/` instead.
@@ -78,12 +78,12 @@ Check it works: `python3 ~/.claude/skills/packlight/scripts/usage_report.py --se
 
 | Command | What it does |
 |---|---|
-| `/packlight` | Sets up the docs. Spots by itself whether the project is new or existing. |
-| `/packlight new` | New project: guided interview, stack suggestion, then the docs. |
-| `/packlight weigh` | Weighs your bag: token report for this project. |
-| `/packlight unpack` | Tidies an existing setup: trims STATUS.md, merges tiny pages, fixes pages that drifted from the code. |
+| `/packlight` | Sets up the docs (new or existing project). |
+| `/packlight-new` | New project: interview, stack, then the docs. |
+| `/packlight-weigh` | Token report for this project. |
+| `/packlight-unpack` | Tidies drifted docs and checks code paths. |
 
-The shortcuts `/packlight-weigh`, `/packlight-new` and `/packlight-unpack` do the same and show up in the `/` menu.
+All four show up in the `/` menu.
 Saying "pack light" or "lighten the load" works too. Packlight never commits; review the files and commit them yourself.
 
 The report can also be run directly, from the project folder:
