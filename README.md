@@ -22,7 +22,12 @@ open sessions at 3 and reuse them by clearing.
 
 ## What it does
 
-**Setup.** Asks four short questions (web / mobile / backend, who the users are, main features, repos and folders), reads
+**New project.** In an empty folder it runs a short guided interview (what you're building, who uses it,
+platforms, expected users, logins / payments / uploads / AI, budget, region and data rules, deadline, team
+skills), suggests a stack with a one-line reason per choice and one alternative, and records your pick in
+`docs/DECISIONS.md`. Then it writes the docs below.
+
+**Existing project.** Asks four short questions (web / mobile / backend, who the users are, main features, repos and folders), reads
 the code, then writes:
 
 - `CLAUDE.md` - rules only, under 80 lines, including the session rules below.
@@ -56,9 +61,16 @@ For one project only, copy it to `<project>/.claude/skills/` instead.
 
 ## Use
 
-In a project, ask Claude Code: "set up packlight" (or type `/packlight`). Review the files, then commit them yourself.
+| Command | What it does |
+|---|---|
+| `/packlight` | Sets up the docs. Spots by itself whether the project is new or existing. |
+| `/packlight new` | New project: guided interview, stack suggestion, then the docs. |
+| `/packlight weigh` | Weighs your bag: token report for this project. |
+| `/packlight unpack` | Tidies an existing setup: trims STATUS.md, merges tiny pages, fixes pages that drifted from the code. |
 
-Token report, from the project folder:
+Saying "pack light" or "lighten the load" works too. Packlight never commits; review the files and commit them yourself.
+
+The report can also be run directly, from the project folder:
 
 ```bash
 python3 ~/.claude/skills/packlight/scripts/usage_report.py --since 2026-11-01
