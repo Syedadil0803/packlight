@@ -34,6 +34,18 @@ expensive model. packlight is the set of habits that fixed it.
 All four appear in the `/` menu. "pack light" or "lighten the load" works too.
 packlight never commits: you review the files and commit them yourself.
 
+## Which command when
+
+| Where you are | Run | What happens |
+|---|---|---|
+| Starting fresh, empty folder | `/packlight-new-project` | Interview, stack, hosting and cost, then the docs. No report yet: no history. |
+| Midway, code but no packlight docs | `/packlight` | Reads the code, writes the docs, records today's token cost as your "before". |
+| Late, big project with old docs | `/packlight`, then `/packlight-unpack` | Same, but never overwrites: it writes its version beside yours for you to approve, then flags stale docs. Biggest visible saving. |
+| Already on packlight, docs drifting | `/packlight-unpack` | Trims STATUS back to one screen, merges or splits pages, checks every path still exists. |
+| Any time | `/packlight-weigh` | Token report. No switch date yet: a baseline. With one: before vs after. |
+
+Plain `/packlight` picks for you: an empty folder goes the new-project way, code goes the setup way.
+
 ## What it writes
 
 ```
