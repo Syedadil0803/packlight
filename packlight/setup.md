@@ -59,7 +59,8 @@ If an answer and the code disagree (say, branch names), write what the code show
 - Small work (a question, a read, one edit) stays in the current session or a subagent.
 - One feature = one session. Group small fixes of the same area into it.
 - At most 3 sessions at once, one per lane. Reuse a session by clearing it, don't open new ones.
-- Clear at feature end or at ~150k context. Before a mid-feature clear, write one hand-over line in STATUS.md.
+- Clear at feature end. ~150k context is a checkpoint, not a wall: finish the current step, write one hand-over
+  line in STATUS.md (done, half-done with file, next), then clear. Deep in a hard bug: finish it first.
 - Model per task: strongest (e.g. Opus) for design, security, hard bugs; mid (e.g. Sonnet) for feature work;
   fastest (e.g. Haiku) for reading, searching, docs, commits. Hand bulk reading to a subagent on a cheaper model.
 - Keep tool output small: tail logs, `git log -10`, read big files by section, grep before reading.

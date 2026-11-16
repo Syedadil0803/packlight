@@ -1,19 +1,25 @@
-# packlight 🎒
+# 🎒 packlight
 
-**Your AI coding sessions are paying to re-read themselves.**
+**Travel light. Spend fewer tokens.**
 
-About 98% of the tokens in a Claude Code session are cache reads: on every step the whole chat is
-read again. Message 200 costs far more than message 2. packlight fixes the habit, not the model:
-every session starts light, from one status page and one feature page, does one job, and ends.
+A long chat is a heavy bag: Claude carries every earlier message on every step, and you pay for it
+each time. About 98% of the tokens in a Claude Code session are that re-reading. packlight packs only
+what the next job needs: one status page, one feature page, one job per session. Then it unpacks and
+starts fresh.
 
 ```
                      before          after packlight
-median per session   ~40M tokens  →  ~7M tokens      (about 5x less)
-tokens per call      ~338k        →  ~200k
+median per session   41.6M tokens →  8.8M tokens     (about 4.7x less)
+tokens per call      368k         →  204k
 ```
-*Measured on one real project over several months, one developer, before and after switching.*
+*Measured on one real project over about 5 weeks so far: 56 sessions, before and after switching.
+Measuring continues, and new optimizations keep coming. Run `/packlight-weigh` to get your own numbers.*
 
-> **Works with:** Claude Code (tested). **Coming:** Codex and other coding agents. The docs it writes are
+Built by **Mohammed Adil Syed**. Running the report across real client projects showed the same leaks every
+time: the chat being re-read, 70-108k tokens spent before any work, and nearly all tokens on the most
+expensive model. packlight is the set of habits that fixed it.
+
+> **Works with:** Claude Code (tested). **Coming soon:** Codex and other coding agents. The docs it writes are
 > plain Markdown, so any agent can read them; the commands and the token report are Claude Code only for now.
 
 ## Four commands
@@ -43,7 +49,8 @@ replaced, never appended, so it stays one screen forever.
 **Session rules** it puts in `CLAUDE.md`:
 - One feature = one session; small work stays in the current one.
 - At most 3 sessions at once, reused by clearing. (Running 30+ at once raised the daily total.)
-- Clear at feature end or ~150k context, with one hand-over line in STATUS.md.
+- Clear at feature end. ~150k context is a checkpoint, not a wall: finish the step, write one hand-over
+  line in STATUS.md, clear, and the fresh session carries on from it.
 - The cheapest model that does the job: strongest for stack, architecture and security; mid for features
   and docs; fastest for reading code, drift checks and reports.
 - Small tool output, no polling sessions, unused connectors off.
@@ -102,7 +109,7 @@ For one project only, copy into `<project>/.claude/skills/` instead.
 
 **Light on itself:** SKILL.md is a short menu; each command's steps live in their own file and load only when it runs.
 
-## Roadmap
+## Coming soon
 
 - Codex and other coding agents.
 - A warning when a session passes ~150k context.
