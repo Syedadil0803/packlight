@@ -61,12 +61,16 @@ load only when that command runs.
 ## Install
 
 ```bash
-git clone <this repo> packlight-repo
+git clone https://github.com/Syedadil0803/packlight.git packlight-repo
 mkdir -p ~/.claude/skills
 cp -r packlight-repo/packlight ~/.claude/skills/
 ```
 
 For one project only, copy it to `<project>/.claude/skills/` instead.
+
+To update later: `git -C packlight-repo pull`, then run the `cp` line again.
+
+Check it works: `python3 ~/.claude/skills/packlight/scripts/usage_report.py --selftest` prints `selftest ok`.
 
 ## Use
 
