@@ -134,17 +134,27 @@ planned features with no code get a line in STATUS.md "Next" or "Later", and a p
 - Suggest `/packlight weigh` now and again in a week to see the change.
 
 ## Unpack
-For a project already set up, when docs have grown or drifted. Cheap pass: line counts first, then read only what fails.
+For a project already set up, when docs have grown or drifted. Cheap pass: line counts first, then read only
+what fails. Run from the project root. Don't commit.
 1. `wc -l CLAUDE.md docs/STATUS.md docs/features/*.md`.
 2. CLAUDE.md over 80 lines: move state to STATUS.md and feature detail to feature pages; keep rules.
-3. STATUS.md over 60 lines or holding history: rewrite to current state only; move finished items into
-   their feature page's "Decisions" or drop them.
-4. Feature pages: merge pages under ~10 lines into a neighbour; split pages past ~150 lines;
-   make the register match the files.
-5. Drift: for each page, check the paths in "Where the code is" still exist (`ls`/grep, don't read code);
-   fix or flag the ones that don't.
-6. Old docs that no longer match the code go to `docs/archive/`, never deleted.
-7. Show a short before/after line count. Don't commit.
+3. STATUS.md: rewrite to current state only, whatever its length. History means dated past events, version
+   lists, commit hashes and "done" items. Git already has commit detail: drop it. A finished item with a
+   reason worth keeping goes to its page's "Decisions (why)". Extra sections are fine if they hold state.
+4. Feature pages: merge pages under ~10 lines into a neighbour. Split a page past ~150 lines at a top-level
+   heading; leave a one-line pointer both ways and add the new page to the register. Make the register
+   match the files.
+5. Drift - check each path in "Where the code is":
+   - Resolve it against the project root, then each repo root in CLAUDE.md "Folders"; a bare filename
+     matches any file of that name (note this is loose).
+   - Strip line numbers (`:120`), function names and anything after a `*`; skip prose entries.
+   - Check the branch the docs name, not the checked-out one: `git -C <repo> ls-tree -r --name-only <branch>`.
+   - Fix a path that moved (find it by name); flag one that is gone in the page's "Open". Don't read code.
+6. Old docs: list a doc as a candidate when the register or CLAUDE.md calls it history, or when no page,
+   CLAUDE.md or the register links to it. Show the list; move to `docs/archive/` only what the user agrees
+   to. Never delete. Also flag a second STATUS.md anywhere under docs/ - sessions may read the wrong one.
+7. Report: before/after line counts (new pages included), changes one per line, drift found/missing.
+   If nothing crossed a limit, say so in one line.
 
 ## Keeping it lean afterwards
 - Each session reads STATUS.md + one feature page, not the whole docs folder.

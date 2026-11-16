@@ -34,12 +34,15 @@ Defaults - start here, change only when an answer says so:
 
 | Need | Default | Change when |
 |---|---|---|
-| Web app | Next.js (React, TypeScript) | Mostly static content: Astro. Every page behind a login (staff/admin tool): Vite + React. |
+| Web app | Next.js (React, TypeScript) | Mostly static content: Astro. Every page behind a login (staff/admin tool): Vite + React, plus a separate Astro site if a public marketing page is needed. |
 | Mobile | Expo (React Native, TypeScript) - one codebase for iPhone and Android | Heavy graphics, AR, deep OS features: native Swift / Kotlin. |
 | Backend / API | Node + TypeScript (NestJS or Fastify) | Team knows Python, or heavy data/AI work: Python + FastAPI. |
 | Small app, small team, fast launch | Hosted backend: Supabase (Postgres, auth, storage) | Strict data rules or region not offered: own backend. |
 | Database | PostgreSQL | Pure key-value or huge write volume: pick for that need. |
+| Vector search (AI over documents) | pgvector in the same Postgres | Tens of millions of chunks or heavy filtering: a vector database. |
+| Reading PDFs, Word, web pages | A parsing library (e.g. Unstructured, Docling); OCR for scans | High volume or complex layouts: a hosted parser. |
 | Auth | The platform's auth (Supabase, Clerk, Cognito, Firebase) | Unusual login rules or local law: own auth with a vetted library. |
+| Business customers' own login (Google/Microsoft SSO, SAML) | WorkOS or Auth0 Organizations | Few customers, Google/Microsoft only: the platform's social login. |
 | Payments | Stripe | Country not supported: the local provider. |
 | Files | S3-compatible object storage | - |
 | Real-time | Supabase Realtime or WebSockets | - |
@@ -48,9 +51,16 @@ Defaults - start here, change only when an answer says so:
 | Push notifications | Expo Notifications (mobile), web push for web | - |
 | Scheduled jobs (reminders, reports) | The host's cron (Supabase cron, Vercel cron) | Many or long jobs: a queue worker. |
 | Hosting | Vercel (web) + a managed container or serverless host (API) | Data must stay in a region: a cloud with a region there. |
-| AI features | A hosted model API behind your own backend; never call it from the app with a key | - |
+| AI features | A hosted model API behind your own backend; never call it from the app with a key. Stream answers to the browser (server-sent events). | Data must stay in a region: the model provider's endpoint in that region, on a cloud the rest of the stack already uses. |
 
 Rules for the suggestion:
+- When two rows pull different ways, decide in this order: data rules and region, then what the team knows,
+  then managed over self-run, then cost.
+- Data that must stay in a region: list every place data lands - database, files, backups, logs, email,
+  AI provider, analytics, error tracking - and pick each one in that region. Note which need a data
+  processing agreement.
+- Software sold to companies (several customers in one system): every query is scoped by customer id;
+  write that as a project rule.
 - One language across the stack when the team is small (TypeScript is the usual pick).
 - Prefer managed services for anything under ~10,000 users; say the monthly cost range.
 - Fewer moving parts beats the newest tool. Name nothing the answers don't need.
@@ -59,6 +69,8 @@ Rules for the suggestion:
 ## 3. Record it
 
 Once the user picks:
+- Project rules in CLAUDE.md may come from the answers (region, data rules, customer separation, who
+  approves releases). Mark any you inferred with "(confirm)".
 - `docs/DECISIONS.md` - one entry per choice: date, decision, why, the alternative and when to revisit.
 - `CLAUDE.md` - "What this is" from round 1; Folders from the planned layout; Gates as the commands the
   stack will use (mark them "planned" until they run).
