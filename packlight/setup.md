@@ -9,6 +9,7 @@ For a project that already has code. (No code yet: use `new-project.md`.)
 4. Repos and folders, and which branch each uses (skip if it is one repo).
 
 Skip any answer the code makes obvious. Don't ask anything else unless only the user can know it.
+No one to ask (scripted run): answer from the code and put what only the owner knows under STATUS "Waiting on owner".
 If an answer and the code disagree (say, branch names), write what the code shows and add the mismatch to STATUS.md "Open follow-ups".
 
 ## 2. Read the code, cheaply
@@ -17,7 +18,17 @@ If an answer and the code disagree (say, branch names), write what the code show
 - Find the real gate commands: build, lint, type check, test. Copy them exactly. A gate that can't run
   (tool missing, no config) still goes in, marked "broken", with a line in STATUS.md "Open follow-ups".
 - Existing CLAUDE.md or docs: keep what is true, move state out of CLAUDE.md into STATUS.md,
-  move feature detail into feature pages. Show the user what will change before overwriting.
+  move feature detail into feature pages. Never overwrite without the user's yes: write your version
+  as `docs/packlight-proposed-<name>` and show the difference.
+- Several repos under one folder: the root CLAUDE.md holds shared rules; each repo's own CLAUDE.md keeps
+  only repo rules (its gates, conventions). List repeats, conflicts and stale lines in the repo files under
+  STATUS "Open follow-ups" and propose edits; don't edit them without a yes.
+- Where the docs live: one repo - inside it, so they are committed with the code. Repo in a subfolder or
+  several repos under a plain folder - at that folder; note in CLAUDE.md that docs/ is not in git and ask
+  the user whether to move it into a repo.
+- Generated files committed to the repo (sitemaps, lockfiles, API clients): note "don't hand-edit".
+- Secret-looking files or folders (`secrets/`, `keys/`, `.env*`): never open them; add a project rule
+  that sessions don't either, and ask the user to confirm they are gitignored.
 
 ## 3. Write the files
 
@@ -38,10 +49,11 @@ If an answer and the code disagree (say, branch names), write what the code show
 <2-3 lines: product, users, platforms.>
 
 ## Folders
-| Folder | What | Branch |      (one row per top-level folder that holds code or docs)
+| Folder | What | Branch now |      (one row per top-level folder; mark folders that are not part of the project)
 
 ## Gates (run before saying done)
-<exact commands per repo>
+<exact commands, grouped per repo>
+
 
 ## Sessions and tokens
 - Small work (a question, a read, one edit) stays in the current session or a subagent.
