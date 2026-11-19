@@ -62,7 +62,8 @@ If an answer and the code disagree (say, branch names), write what the code show
 - Clear at feature end. ~150k context is a checkpoint, not a wall: finish the current step, write one hand-over
   line in STATUS.md (done, half-done with file, next), then clear. Deep in a hard bug: finish it first.
 - Model per task: strongest (e.g. Opus) for design, security, hard bugs; mid (e.g. Sonnet) for feature work;
-  fastest (e.g. Haiku) for reading, searching, docs, commits. Hand bulk reading to a subagent on a cheaper model.
+  fastest (e.g. Haiku) for bulk reading and searching, as a subagent (it keeps big output out of the chat).
+  Commits and small edits stay inline: a subagent's startup costs more than they do.
 - Keep tool output small: tail logs, `git log -10`, read big files by section, grep before reading.
 - No sessions that poll or loop waiting on something.
 - Turn off MCP connectors this project does not use.
