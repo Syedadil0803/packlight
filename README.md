@@ -119,6 +119,21 @@ Check: `python3 ~/.claude/skills/packlight/scripts/usage_report.py --selftest` p
 Update: `git -C packlight-repo pull`, then run the two `cp` lines again.
 For one project only, copy into `<project>/.claude/skills/` instead.
 
+### Always-on mode (optional)
+
+Nudges you to run `/packlight` in any project that isn't set up yet. Type `stop packlight` to turn it off, `start packlight` to turn it back on (applies to new chats). Add to `~/.claude/settings.json`:
+
+```json
+"hooks": {
+  "SessionStart": [{ "matcher": "startup|resume|clear|compact",
+    "hooks": [{ "type": "command", "command": "bash \"$HOME/.claude/skills/packlight/scripts/mode.sh\" start", "timeout": 5 }] }],
+  "UserPromptSubmit": [{
+    "hooks": [{ "type": "command", "command": "bash \"$HOME/.claude/skills/packlight/scripts/mode.sh\" prompt", "timeout": 5 }] }]
+}
+```
+
+Check: `bash ~/.claude/skills/packlight/scripts/mode.sh --selftest` prints `selftest ok`. It prints nothing in a project that is set up (CLAUDE.md already holds the rules) and one nudge to run `/packlight` where there is no `docs/STATUS.md`. Only the whole message `stop packlight` or `start packlight` counts.
+
 **Light on itself:** SKILL.md is a short menu; each command's steps live in their own file and load only when it runs.
 
 ## Coming soon

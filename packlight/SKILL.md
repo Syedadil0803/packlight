@@ -16,14 +16,16 @@ a small, current set of docs cost far less. Load only the file the command needs
 | `/packlight-unpack` | Read `unpack.md`. |
 
 ## Model per task
-Use the cheapest model that does the job well. When this session runs on a stronger model than a step
-needs, hand that step to a subagent on the cheaper model and keep only its summary.
+Use the cheapest model that does the job well. Pick it when the session starts (`/model`), not halfway.
+A subagent pays its own startup, so hand off only bulky reading and searching, where it keeps big output
+out of this chat, and keep only its summary. Commits and small edits stay inline.
 
 | Work | Model tier (current example) |
 |---|---|
 | Stack choice, architecture, security, hard bugs | Strongest (Opus) |
 | Interview, writing CLAUDE.md and feature pages, feature work, reviews | Mid (Sonnet) |
-| Reading and searching code, drift checks, line counts, `weigh`, commits, small doc edits | Fastest (Haiku) |
+| Bulk reading and searching code, drift checks, line counts, `weigh` | Fastest (Haiku), as a subagent |
+| Commits, small doc edits | Inline, in the current session |
 
 ## Keeping it lean afterwards
 - Each session reads STATUS.md + one feature page, not the whole docs folder.
